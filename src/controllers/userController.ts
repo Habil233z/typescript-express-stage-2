@@ -1,24 +1,22 @@
 import {Request, Response} from "express";
 
-export const getProfile = (req: Request, res:Response) => {
+export const getHello = (req: Request, res:Response) => {
     return res.json({
-        id: 1,
-        username: "Habil",
-        email: "dummy@gmail.com"
+        message: "Hello world"
     })
 }
 
-export const getProfilebyId = (req: Request, res:Response) => {
-    const {id} = req.params
+export const getProfilebyName = (req: Request, res:Response) => {
+    const {name} = req.params
     return res.json({
-        message: `Found user with id:${id}`
+        message: `Found user ${name}`
     })
 }
 
-export const createProfile = (req: Request, res:Response) => {
-    const {id, name, email} = req.body
+export const login = (req: Request, res:Response) => {
+    const {name, email, password} = req.body
     return res.status(201).json({
-        message: "User has been created",
-        data: {id, name, email}
+        message: "User has login successfully",
+        data: {name, email, password}
     })
 }

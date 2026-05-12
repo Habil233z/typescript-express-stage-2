@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getProfile, getProfilebyId, createProfile } from "../controllers/userController";
+import { getHello, getProfilebyName, login } from "../controllers/userController";
 
 const router = Router()
 
-router.get('/profile', getProfile)
-router.get('/profile/:id', getProfilebyId)
-router.post('/profile', createProfile)
+router.get('/profile', getHello)
+router.get('/profile/:id', getProfilebyName)
+router.post('/profile', login)
 
 export default router
