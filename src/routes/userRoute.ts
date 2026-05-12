@@ -3,8 +3,8 @@ import { getHello, getProfilebyName, login } from "../controllers/userController
 
 const router = Router()
 
-router.get('/profile', getHello)
+router.get('/hello', getHello)
 router.get('/profile/:name', getProfilebyName)
-router.post('/profile', login)
+router.post('/login', login)
 
 export default router
