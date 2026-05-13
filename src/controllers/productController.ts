@@ -3,12 +3,13 @@ import prisma from "../lib/prisma";
 
 export const createProduct = async (req:Request, res:Response) => {
     try {
-        const {name, price, description} = req.body
+        const {name, price, stock, category} = req.body
         const newProduct = await prisma.product.create({
             data: {
                 name: name,
                 price: Number(price),
-                description: description
+                stock: Number(stock),
+                category: category
             }
         })
 
