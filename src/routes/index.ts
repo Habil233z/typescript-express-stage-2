@@ -4,7 +4,7 @@ import productRoute from "./productRoute"
 
 const router = Router()
 
-router.use("/", userRoute)
+router.use("/users", userRoute)
 router.use("/products", productRoute)
 
 export default router

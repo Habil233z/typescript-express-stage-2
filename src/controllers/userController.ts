@@ -1,22 +1,40 @@
 import {Request, Response} from "express";
+import prisma from "../lib/prisma";
 
-export const getHello = (req: Request, res:Response) => {
-    return res.json({
-        message: "Hello world"
-    })
+export const getUsers = async (req:Request, res:Response) => {
+    try {
+        const users = await prisma.user.findMany()
+        return res.status(200).json({
+            message: "Users fetched successfully",
+            data: users
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed fetch users",
+            error: error
+        })
+    }
 }
 
-export const getProfilebyName = (req: Request, res:Response) => {
-    const {name} = req.params
-    return res.json({
-        message: `Found user ${name}`
-    })
-}
+export const createUser = async (req:Request, res:Response) => {
+    try {
+        const {name, email, password} = req.body
+        const newUser = await prisma.user.create({
+            data: {
+                name: name,
+                email: email,
+                password: password
+            }
+        })
 
-export const login = (req: Request, res:Response) => {
-    const {name, email, password} = req.body
-    return res.status(201).json({
-        message: "User has login successfully",
-        data: {name, email, password}
-    })
+        return res.status(201).json({
+            message: "User created",
+            data: newUser
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: "Fail to create user",
+            error: error
+        })
+    }
 }
