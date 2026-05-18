@@ -40,10 +40,9 @@ export const transferHandler = async (req: Request, res: Response, next: NextFun
             })
         }
         next()
-    } catch (error) {
-        return res.status(400).json({
-            message: "Problem at Transfer Middleware"
-        })
+    } catch (error: any) {
+        error.message= "Problem at transferMiddleware"
+        next(error)
     }
 }
 
