@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import {Request, Response, NextFunction} from "express";
 import prisma from "../lib/prisma";
 
 export const getUsers = async (req:Request, res:Response, next: NextFunction) => {
@@ -36,9 +36,8 @@ export const createUser = async (req:Request, res:Response, next: NextFunction) 
 }
 
 export const transferPoint = async (req:Request, res:Response, next: NextFunction) => {
-    const {senderId, receiverId, amount} = req.body
-
     try {
+        const {senderId, receiverId, amount} = req.body
         await prisma.$transaction([
             prisma.user.update({
                 where: {id: Number(senderId)},
