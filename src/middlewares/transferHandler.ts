@@ -36,7 +36,7 @@ export const transferHandler = async (req: Request, res: Response, next: NextFun
         const avalablePoint = sender?.point
         if (amount > avalablePoint) {
             return res.status(422).json({
-                message: "Sender didn't have enoug point to do this point transfer"
+                message: "Sender didn't have enough point to do this point transfer"
             })
         }
         next()
