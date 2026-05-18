@@ -1,7 +1,7 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import prisma from "../lib/prisma";
 
-export const createProduct = async (req:Request, res:Response) => {
+export const createProduct = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {name, price, stock, category} = req.body
         const newProduct = await prisma.product.create({
@@ -17,15 +17,13 @@ export const createProduct = async (req:Request, res:Response) => {
             message: "Product created",
             data: newProduct
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to create product",
-            error: error
-        })
+    } catch (error:any) {
+        error.message= "Fail to create product"
+        next(error)
     }
 }
 
-export const getAllProducts = async (req:Request, res:Response) => {
+export const getAllProducts = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {search, minPrice, sortBy} = req.query
 
@@ -72,15 +70,13 @@ export const getAllProducts = async (req:Request, res:Response) => {
             },
             data: products
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed fetch products",
-            error: error
-        })
+    } catch (error: any) {
+        error.message= "Internal Error"
+        next(error)
     }
 }
 
-export const getProductById = async (req:Request, res:Response) => {
+export const getProductById = async (req:Request, res:Response, next:NextFunction) => {
     try {
         const {id} = req.params
         const product = await prisma.product.findUnique({
@@ -99,15 +95,13 @@ export const getProductById = async (req:Request, res:Response) => {
             message: "Product fetched",
             data: product
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed fetch products",
-            error: error
-        })
+    } catch (error: any) {
+        error.message= "Internal Error"
+        next(error)
     }
 }
 
-export const updateProduct = async (req:Request, res:Response) => {
+export const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const {id} = req.params
         const {name, price, description} = req.body
@@ -127,15 +121,13 @@ export const updateProduct = async (req:Request, res:Response) => {
             message: "Product updated successfully",
             data: updatedProduct
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed fetch products",
-            error: error
-        })
+    } catch (error: any) {
+        error.message= "Internal Error"
+        next(error)
     }
 }
 
-export const deleteProduct = async (req:Request, res:Response) => {
+export const deleteProduct = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {id} =  req.params
         await prisma.product.delete({
@@ -147,10 +139,8 @@ export const deleteProduct = async (req:Request, res:Response) => {
         return res.status(200).json({
             message: "Product deleted successfully"
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to delete product",
-            error: error
-        })
+    } catch (error: any) {
+        error.message= "Internal Error"
+        next(error)
     }
 }

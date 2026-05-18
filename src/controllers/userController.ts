@@ -1,22 +1,20 @@
-import {Request, Response} from "express";
+import {NextFunction, Request, Response} from "express";
 import prisma from "../lib/prisma";
 
-export const getUsers = async (req:Request, res:Response) => {
+export const getUsers = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const users = await prisma.user.findMany()
         return res.status(200).json({
             message: "Users fetched successfully",
             data: users
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed fetch users",
-            error: error
-        })
+    } catch (error: any) {
+        error.message= "Fail to get user"
+        next(error)
     }
 }
 
-export const createUser = async (req:Request, res:Response) => {
+export const createUser = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {name, email, password} = req.body
         const newUser = await prisma.user.create({
@@ -31,10 +29,32 @@ export const createUser = async (req:Request, res:Response) => {
             message: "User created",
             data: newUser
         })
-    } catch (error) {
-        return res.status(500).json({
-            message: "Fail to create user",
-            error: error
+    } catch (error: any) {
+        error.message= "Fail to create user"
+        next(error)
+    }
+}
+
+export const transferPoint = async (req:Request, res:Response, next: NextFunction) => {
+    const {senderId, receiverId, amount} = req.body
+
+    try {
+        await prisma.$transaction([
+            prisma.user.update({
+                where: {id: Number(senderId)},
+                data: {point: {decrement: Number(amount)}}
+            }),
+            prisma.user.update({
+                where: {id: Number(receiverId)},
+                data: {point: {increment: Number(amount)}}
+            })
+        ])
+
+        return res.status(200).json({
+            message: "Transfer berhasil"
         })
+    } catch (error: any) {
+        error.message= "Internal Error"
+        next(error)
     }
 }
