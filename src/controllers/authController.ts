@@ -6,12 +6,26 @@ import jwt from "jsonwebtoken"
 export const register = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {name, email, password} = req.body
+         const image = req.file ? req.file.filename : null
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
         
+        const existingEmail = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
+
+        if (email === existingEmail?.email) {
+            return res.status(400).json({
+                message: "User with this email has already been registered, please use another email"
+            })
+        }
+
         const newUser = await prisma.user.create({
             data: {
+                profilePicture: image,
                 name,
                 email,
                 password: hashedPassword
@@ -22,7 +36,7 @@ export const register = async (req:Request, res:Response, next: NextFunction) =>
             message: "Register successfull",
             data: {
                 id: newUser.id,
-                nmae: newUser.name,
+                name: newUser.name,
                 email: newUser.email
             }
         })

@@ -14,27 +14,6 @@ export const getUsers = async (req:Request, res:Response, next: NextFunction) =>
     }
 }
 
-export const createUser = async (req:Request, res:Response, next: NextFunction) => {
-    try {
-        const {name, email, password} = req.body
-        const newUser = await prisma.user.create({
-            data: {
-                name: name,
-                email: email,
-                password: password
-            }
-        })
-
-        return res.status(201).json({
-            message: "User created",
-            data: newUser
-        })
-    } catch (error: any) {
-        error.message= "Fail to create user"
-        next(error)
-    }
-}
-
 export const transferPoint = async (req:Request, res:Response, next: NextFunction) => {
     try {
         const {senderId, receiverId, amount} = req.body

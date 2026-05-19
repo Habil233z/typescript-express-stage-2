@@ -14,7 +14,7 @@ export const createProduct = async (req:Request, res:Response, next: NextFunctio
                 description: description,
                 category: category,
                 userId: Number(userId),
-                image,
+                image: image,
             }
         })
 

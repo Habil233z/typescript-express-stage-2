@@ -26,6 +26,7 @@ model product {
 
 model user {
   id Int @id @default(autoincrement())
+  profilePicture String?
   name String
   email String @unique
   password String

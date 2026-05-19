@@ -9,9 +9,9 @@ import { upload } from "../lib/multer";
 const router = Router()
 
 router.post("/", authentication, upload.single("image"), validate(createProductSchema), createProduct)
-router.get("/", authentication, authorizeRole(["ADMIN"]), getAllProducts)
+router.get("/", getAllProducts)
 router.get("/:id", getProductById)
-router.put("/:id", updateProduct)
-router.delete("/:id", deleteProduct)
+router.put("/:id", authentication, authorizeRole(["ADMIN", "USER"]), updateProduct)
+router.delete("/:id", authentication, authorizeRole(["ADMIN"]), deleteProduct)
 
 export default router

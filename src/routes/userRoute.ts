@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { getUsers, createUser, transferPoint } from "../controllers/userController";
+import { getUsers, transferPoint } from "../controllers/userController";
 import { validate } from "../middlewares/validate";
 import { transferPointSchema } from "../validations/transferSchema";
 import { transferHandler } from "../middlewares/transferHandler";
+import { authentication } from "../middlewares/authMiddleware";
 
 const router = Router()
 
-router.get('/', getUsers)
-router.post('/', createUser)
-router.post('/transfer', validate(transferPointSchema), transferHandler, transferPoint)
+router.get('/', authentication ,getUsers)
+router.post('/transfer', authentication, validate(transferPointSchema), transferHandler, transferPoint)
 
 export default router
